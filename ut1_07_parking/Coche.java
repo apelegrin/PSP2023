@@ -7,6 +7,8 @@ public class Coche extends Thread{
 	private Sincro sincro;
 	private int id;
 	private Parking parking;
+	private long tiempoEntrada;
+	private long tiempoSalida;
 	
 	public Coche(int id, Sincro sincro, Parking parking) {
 		this.id = id;
@@ -27,12 +29,15 @@ public class Coche extends Thread{
 			while (intentos < 3) {
 				Thread.sleep(aleatorio.nextInt(100));
 				if (parking.esDentroParking()) {
+					tiempoEntrada = System.currentTimeMillis();
 					System.out.println("El coche "+id+" entra al parking");
 					//simulamos un tiempo de estancia
 					Thread.sleep(aleatorio.nextInt(400));
 					parking.salirParking();
 					System.out.println("El coche "+id+" sale del parking");
 					intentos = 3;
+					tiempoSalida = System.currentTimeMillis();
+					parking.addTiempoEstacionado(tiempoSalida - tiempoEntrada);
 				}
 				else {
 					System.out.println("El coche "+id+" no ha podido entrar al parking");

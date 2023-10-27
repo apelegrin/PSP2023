@@ -16,8 +16,11 @@ public class Main {
         sincro.esperarFinCoches();
         long finSimulacion = System.currentTimeMillis();
         long tiempoSimulacion = finSimulacion-inicioSimulacion;
+        long tiempoMedio = parking.getTiempoEstacionamientos()/parking.getContadorEstacionamientos();
         System.out.println("Tiempo simulación "+tiempoSimulacion);
         System.out.println("Han entrado "+parking.getContadorEstacionamientos());
+        System.out.println("El tiempo medio de estacia es  "+tiempoMedio);
+        
 	}
 
 }

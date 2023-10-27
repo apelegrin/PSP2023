@@ -1,12 +1,16 @@
 package ut1_07_parking;
 
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Parking {
     private int maxparking;
     private Semaphore estacionados;
     private Semaphore accesoContador;
+    private Lock miLock = new ReentrantLock();;
     private int contadorEstacionamientos;
+    private long tiempoEstacionamientos;
     
 	public Parking(int maxparking) {
 		this.maxparking = maxparking;
@@ -51,4 +55,19 @@ public class Parking {
 		return estacionados.tryAcquire();
 	}
 
+	public void addTiempoEstacionado(long tiempoCoche) {
+		miLock.lock();
+		    tiempoEstacionamientos +=  tiempoCoche;
+		miLock.unlock();
+	}
+
+	public long getTiempoEstacionamientos() {
+		long tiempo = 0;
+
+		miLock.lock();
+		    tiempo = tiempoEstacionamientos;
+		miLock.unlock();
+		return tiempo;
+		
+	}
 }
