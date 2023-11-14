@@ -17,8 +17,8 @@ public class Mira extends Thread{
 	private String rutaImagen;
 	private Posicion actual;
 	private boolean isEnJuego;
-    private String tecla;
-    private boolean pulsada;
+    private boolean isDisparado;
+	private String tecla;
     private Pantalla pantalla;
     private int ancho;
     private int alto;
@@ -28,6 +28,13 @@ public class Mira extends Thread{
 	}
 
 	public String getRutaImagen() {
+		if (isDisparado) {
+			rutaImagen = RUTA_IMAGEN_DISPARO;
+			isDisparado = false;
+		}
+		else {
+			rutaImagen = RUTA_IMAGEN_OBJETIVO;
+		}
 		return rutaImagen;
 	}
 
@@ -36,7 +43,7 @@ public class Mira extends Thread{
 		this.actual = p;
 		this.rutaImagen = RUTA_IMAGEN_OBJETIVO;
 		this.isEnJuego = true;
-		this.pulsada = false;
+		this.isDisparado = false;
 		this.ancho = ancho;
 		this.alto = alto;
 		this.start();
@@ -74,7 +81,7 @@ public class Mira extends Thread{
 					}
 					break;
 				case TECLA_DISPARO:
-					
+					this.isDisparado = true;
 					break;
 				}
 			}
