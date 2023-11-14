@@ -10,6 +10,8 @@ public class Game {
     private int redibujar;
     private boolean finJuego;
     private Pantalla pantalla;
+    private Mira mira;
+    private Posicion posicionObjetivo;
     
 	public Game(int ancho, int alto, int lado, int redibujar) {
 		this.ancho = ancho;
@@ -20,12 +22,24 @@ public class Game {
 	}
 
 	public void iniciar() {
+		
+		//Rutas sprites
 		String rutaImagenFondo ="imagenes/panel-basico.gif";
-        pantalla = new Pantalla(ancho,alto,lado,Color.BLUE);
+		
+        
+		//Creamos la pantalla
+		pantalla = new Pantalla(ancho,alto,lado,Color.BLUE);
+		posicionObjetivo = new Posicion(5,5);
+        mira = new Mira(pantalla,posicionObjetivo,ancho,alto);
+        
+        String tecla;
+        
 		while (!finJuego) {
 			pantalla.resetear();
 			//Recorrer todos los objetos de pantalla y agregar su imagen
 			cargarFondo(rutaImagenFondo);
+			//Cargar objetivo
+			pantalla.addImagen(mira.getPosicion().getX(),mira.getPosicion().getY(),mira.getRutaImagen());
 			pantalla.dibujar();
 			Alarma.dormir(redibujar);
 		}
