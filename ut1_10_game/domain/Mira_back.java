@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 
 import topos.vista1.Pantalla;
 
-public class Mira {
+public class Mira_back extends Thread{
 	private static final String TECLA_ARRIBA = "w";
 	private static final String TECLA_ABAJO = "s";
 	private static final String TECLA_IZQUIERDA = "a";
@@ -42,7 +42,7 @@ public class Mira {
 		return rutaImagen;
 	}
 
-	public Mira(Pantalla pantalla, Posicion p, int ancho, int alto, Sincro sincro) {
+	public Mira_back(Pantalla pantalla, Posicion p, int ancho, int alto, Sincro sincro) {
 		this.pantalla = pantalla;
 		this.actual = p;
 		this.rutaImagen = RUTA_IMAGEN_OBJETIVO;
@@ -51,18 +51,19 @@ public class Mira {
 		this.ancho = ancho;
 		this.alto = alto;
 		this.sincro = sincro;
+		this.start();
 	}
 
 	public boolean isDisparado() {
 		return disparo;
 	}
 	
-	public void teclado() {
+	public void run() {
 		
-			//System.out.println(""); //apaño para teclado
+		while (isEnJuego) {
+			System.out.println(""); //apaño para teclado
 			if (pantalla.hayTecla()) {
 				tecla = pantalla.leerTecla();
-				this.sincro.spriteCountDown();
 				switch (tecla) {
 				case TECLA_ARRIBA:
 					actual.cambiarPosi(Direccion.ARRIBA);
@@ -96,6 +97,7 @@ public class Mira {
 						break;
 				}//end_case
 			}//end_if hayecla
+		}//while isEnJuego
 	}
 
 }

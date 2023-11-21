@@ -42,13 +42,18 @@ public class Game {
         //Definir Sprites
         Sprite globo01 = new Sprite(ancho,alto,rutaImagenGlobo,sincro);
         Sprite globo02 = new Sprite(ancho,alto,rutaImagenGlobo,sincro);
+        Sprite globo03 = new Sprite(ancho,alto,rutaImagenGlobo,sincro);
+        Sprite globo04 = new Sprite(ancho,alto,rutaImagenGlobo,sincro);
         
         LinkedList<Sprite> listaSprites = new LinkedList<Sprite>();
         listaSprites.add(globo01);
         listaSprites.add(globo02);
+        listaSprites.add(globo03);
+        listaSprites.add(globo04);
         
 		while (!finJuego) {
 			pantalla.resetear();
+			mira.teclado();
 			//Recorrer todos los objetos de pantalla y agregar su imagen
 			cargarFondo(rutaImagenFondo);
 			cargarSprites(listaSprites);
@@ -61,7 +66,9 @@ public class Game {
 	
 	private void cargarSprites(LinkedList<Sprite> listaSprites) {
 		for (Sprite s: listaSprites) {
-			pantalla.addImagen(s.getPosicion().getX(), s.getPosicion().getY(), s.getRutaSprite());
+			Posicion p = s.getPosicion();
+			//System.out.println(("Posicion X:"+p.getX()+" Y:"+p.getY()));
+			pantalla.addImagen(p.getX(),p.getY(), s.getRutaSprite());
 		}
 		//Cargar objetivo
 		pantalla.addImagen(mira.getPosicion().getX(),mira.getPosicion().getY(),mira.getRutaImagen());

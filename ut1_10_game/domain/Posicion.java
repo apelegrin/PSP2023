@@ -51,7 +51,7 @@ public class Posicion {
 	}
 
 	public void incY() {
-		this.x++;
+		this.y++;
 	}
 
 	public void decY() {

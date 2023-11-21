@@ -1,6 +1,8 @@
 package domain;
 
 import java.util.Random;
+import java.util.concurrent.Semaphore;
+
 import topos.vista1.*;
 
 public class Sprite extends Thread{
@@ -12,6 +14,8 @@ public class Sprite extends Thread{
 	private Sincro sincro;
 	private boolean fin;
 	private int espera;
+	private Semaphore lock;
+	
 	public Sprite(int ancho, int alto, String rutaImagenGlobo, Sincro sincro) {
 		Random aleatorio = new Random();
 		this.ancho = ancho;
@@ -20,12 +24,20 @@ public class Sprite extends Thread{
 		this.sincro = sincro;
 		this.p = new Posicion(aleatorio.nextInt(ancho), aleatorio.nextInt(alto));
 		this.fin = false;
-		this.espera = 300;
+		this.espera = 500;
+		this.lock = new Semaphore(1);
 		this.start();
 	}
 
 	public Posicion getPosicion() {
+		try {
+			this.lock.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Posicion actual = new Posicion(p);
+		this.lock.release();
 		return actual;
 	}
 
@@ -35,10 +47,17 @@ public class Sprite extends Thread{
 
 	public void run() {
 		int avanza;
-		//this.sincro.spriteAwait();
-		System.out.println("Inicia Sprite");
+		Random aleatorio = new Random();
+		this.sincro.spriteAwait();
 		while (!fin) {
-			avanza = (int) (Math.random() * 4);
+			try {
+				this.lock.acquire();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			avanza = aleatorio.nextInt(4);
+			//System.out.println(Thread.currentThread().getName()+" "+avanza);
 			switch (avanza) {
 			case 0:
 				p.incY();
@@ -65,6 +84,12 @@ public class Sprite extends Thread{
 				}
 				break;
 			}
+			//Apaño
+			//if (p.getX() == ancho) {
+			//	p.decX();
+			//}
+	
+			this.lock.release();
 			Alarma.dormir(espera);
 		}
 	}
