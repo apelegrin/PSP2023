@@ -9,6 +9,7 @@ public class BankServer {
 	public static void main(String[] args) {
 		try {
 			ServerSocket miServer = new ServerSocket(8888);
+			Banco miBanco = new Banco(100);
 			System.out.println("Server running...");
 			boolean fin = false;
 			int id = 0;
