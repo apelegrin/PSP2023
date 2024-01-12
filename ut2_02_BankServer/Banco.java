@@ -9,5 +9,12 @@ public class Banco {
 			cuenta[i] = new Cuenta(0);
 		}
 	}
+	public void setIngreso(int cuentaId, int importe) {
+		cuenta[cuentaId].setIngreso(importe);
+		
+	}
+	public int getSaldo(int cuentaId) {
+		return cuenta[cuentaId].getSaldo();
+	}
 
 }

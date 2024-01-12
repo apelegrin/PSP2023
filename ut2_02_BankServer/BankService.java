@@ -11,10 +11,14 @@ public class BankService extends Thread {
 	private Socket s;
 	private PrintWriter flujoS;
 	private Scanner flujoE;
+	private Banco miBanco;
+	private int cuenta;
 	
-	public BankService(int id, Socket s) {
+	public BankService(int id, Socket s, Banco miBanco) {
 		this.id = id;
 		this.s = s;
+		this.miBanco = miBanco;
+		this.cuenta = -1;
 		this.start();
 	}
 
@@ -29,13 +33,17 @@ public class BankService extends Thread {
 			flujoS.println("Bienvenido a la banca online. Le atiende "+id);
 			flujoS.flush();
 			while (!fin) {
-				String comando = flujoE.nextLine();
+				String comando = flujoE.next();
 				if (comando.contains("quit")) {
 					fin = true;
 				}
 				else {
+					if (cuenta == -1) {
+						flujoS.println("Para operar activa una cuenta");
+					}
 					procesaComando(comando);
 				}
+				flujoS.flush();
 			}
 			flujoS.close();
 			flujoE.close();
@@ -49,7 +57,22 @@ public class BankService extends Thread {
 	}
 
 	private void procesaComando(String comando) {
+		int importe = 0;
 		
-		
+		if (comando.contains("cuenta")) {
+			cuenta = flujoE.nextInt();
+			if (cuenta >= 0) {
+				flujoS.println("Seleccionada la cuenta "+cuenta);
+			}else {
+				cuenta = -1;
+			}
+		}
+		else if (comando.contains("ingreso")) {
+			importe = flujoE.nextInt();
+			miBanco.setIngreso(cuenta,importe);
+		}
+		else if (comando.contains("saldo")) {
+			flujoS.println("La cuenta "+cuenta+" tiene un saldo de "+miBanco.getSaldo(cuenta));
+		}
 	}
 }

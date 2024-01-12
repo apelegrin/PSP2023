@@ -8,9 +8,10 @@ public class BankServer {
 
 	public static void main(String[] args) {
 		try {
-			ServerSocket miServer = new ServerSocket(8888);
+			int port = 8888;
+			ServerSocket miServer = new ServerSocket(port);
 			Banco miBanco = new Banco(100);
-			System.out.println("Server running...");
+			System.out.println("Server running... at "+port);
 			boolean fin = false;
 			int id = 0;
 			while (!fin) {
@@ -18,7 +19,7 @@ public class BankServer {
 				Socket s = miServer.accept();
 				//Iniciamos el servicio que gestiona la conexión
 				id++;
-				BankService servicio = new BankService(id,s);
+				BankService servicio = new BankService(id,s,miBanco);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
