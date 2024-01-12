@@ -13,6 +13,14 @@ public class Cuenta {
 		// TODO Auto-generated method stub
 		return saldo;
 	}
+	public int getReintegro(int importe) {
+		int reintegro = -1;
+		if (saldo >= importe) {
+			saldo -= importe;
+			reintegro = importe;
+		}
+		return reintegro;
+	}
 
 
 }

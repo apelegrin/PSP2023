@@ -38,10 +38,18 @@ public class BankService extends Thread {
 					fin = true;
 				}
 				else {
-					if (cuenta == -1) {
-						flujoS.println("Para operar activa una cuenta");
+					if (comando.contains("cuenta")) {
+						cuenta = flujoE.nextInt();
+						if (cuenta >= 0) {
+							flujoS.println("Seleccionada la cuenta "+cuenta);
+						}
+						else {
+							flujoS.println("Error de comando ");
+						}
 					}
-					procesaComando(comando);
+					else{ 
+						procesaComando(comando);
+					};
 				}
 				flujoS.flush();
 			}
@@ -58,21 +66,48 @@ public class BankService extends Thread {
 
 	private void procesaComando(String comando) {
 		int importe = 0;
-		
-		if (comando.contains("cuenta")) {
-			cuenta = flujoE.nextInt();
-			if (cuenta >= 0) {
-				flujoS.println("Seleccionada la cuenta "+cuenta);
-			}else {
-				cuenta = -1;
+		if (cuenta == -1) {
+			flujoS.println("Para operar activa una cuenta");
+		}
+		else {
+			if (comando.contains("ingreso")) {
+				importe = flujoE.nextInt();
+				miBanco.setIngreso(cuenta,importe);
+				flujoS.println("Ingresado en cuenta "+cuenta);
+				flujoS.println("Saldo "+miBanco.getSaldo(cuenta));
 			}
-		}
-		else if (comando.contains("ingreso")) {
-			importe = flujoE.nextInt();
-			miBanco.setIngreso(cuenta,importe);
-		}
-		else if (comando.contains("saldo")) {
-			flujoS.println("La cuenta "+cuenta+" tiene un saldo de "+miBanco.getSaldo(cuenta));
-		}
+			else if (comando.contains("reintegro")) {
+				importe = flujoE.nextInt();
+				int cantidad = miBanco.getReintegro(cuenta,importe);
+				if (cantidad != -1) {
+					flujoS.println("Retirado de cuenta "+cuenta+" importe "+cantidad);
+					flujoS.println("Saldo "+miBanco.getSaldo(cuenta));
+				}else {
+					flujoS.println("Saldo insuficiente");
+				}
+			}
+			else if (comando.contains("saldo")) {
+				flujoS.println("La cuenta "+cuenta+" tiene un saldo de "+miBanco.getSaldo(cuenta));
+			}
+			else if (comando.contains("ingreso")) {
+				importe = flujoE.nextInt();
+				miBanco.setIngreso(cuenta,importe);
+				flujoS.println("Ingresado en cuenta "+cuenta);
+				flujoS.println("Saldo "+miBanco.getSaldo(cuenta));
+			}
+			else if (comando.contains("reintegro")) {
+				importe = flujoE.nextInt();
+				int cantidad = miBanco.getReintegro(cuenta,importe);
+				if (cantidad != -1) {
+					flujoS.println("Retirado de cuenta "+cuenta+" importe "+cantidad);
+					flujoS.println("Saldo "+miBanco.getSaldo(cuenta));
+				}else {
+					flujoS.println("Saldo insuficiente");
+				}
+			}
+			else if (comando.contains("saldo")) {
+				flujoS.println("La cuenta "+cuenta+" tiene un saldo de "+miBanco.getSaldo(cuenta));
+			}
+		}//end_else
 	}
 }

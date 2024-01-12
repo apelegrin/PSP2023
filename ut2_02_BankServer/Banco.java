@@ -16,5 +16,8 @@ public class Banco {
 	public int getSaldo(int cuentaId) {
 		return cuenta[cuentaId].getSaldo();
 	}
+	public int getReintegro(int cuentaId, int importe) {
+		return cuenta[cuentaId].getReintegro(importe);
+	}
 
 }
