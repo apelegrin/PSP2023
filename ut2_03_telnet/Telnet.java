@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import javax.swing.JTextField;
@@ -31,6 +33,7 @@ public class Telnet {
 	private JButton btnEnviar;
 	private JButton btnConectar;
 	private JTextField txtStatus;
+	private JScrollPane scrollPane;
 	
 	private String serverIP = "127.0.0.1";
 	private int serverPort = 8888;
@@ -38,6 +41,7 @@ public class Telnet {
 	private InetAddress host;
 	private PrintWriter flujoS;
 	private boolean conectado = false;
+	private Receptor receptorMensajes;
 
 	/**
 	 * Launch the application.
@@ -112,11 +116,15 @@ public class Telnet {
 
 		//txtRecibido
 		txtRecibido = new JTextArea();
-		txtRecibido.setBounds(32, 100, 518, 150);
-		txtRecibido.setBackground(new Color(230, 230, 250));
-		txtRecibido.setWrapStyleWord(true);
-		frame.getContentPane().add(txtRecibido);
-
+		txtRecibido.setEditable(false);
+		//txtRecibido.setBounds(32, 100, 518, 150);
+		//txtRecibido.setBackground(new Color(230, 230, 250));
+		//txtRecibido.setWrapStyleWord(true);
+		//frame.getContentPane().add(txtRecibido);
+        scrollPane = new JScrollPane(txtRecibido);
+        scrollPane.setBounds(32, 100, 518, 150);
+        frame.getContentPane().add(scrollPane);
+		
 		//txtEnviar
 		txtEnviar = new JTextField();
 		txtEnviar.setBounds(85, 282, 380, 19);
@@ -149,6 +157,7 @@ public class Telnet {
 						btnLogout.setEnabled(true);
 						btnConectar.setEnabled(false);
 						flujoS = new PrintWriter(s.getOutputStream());
+						receptorMensajes = new Receptor(s,txtRecibido,scrollPane);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						//e1.printStackTrace();
@@ -169,7 +178,9 @@ public class Telnet {
 					txtStatus.setText("Desconectado");
 					btnConectar.setEnabled(true);
 					btnLogout.setEnabled(false);
+					receptorMensajes.finalizar();
 					s.close();
+					txtRecibido.setText("");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -177,5 +188,27 @@ public class Telnet {
 			}
 		});
 		
+		txtEnviar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				sendComando();
+			}
+		});
+		
+		btnEnviar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				sendComando();
+			}
+		});
+		
 	}
+
+	
+	protected void sendComando() {
+			String comando = txtEnviar.getText();
+			flujoS.println(comando);
+			flujoS.flush();
+			txtEnviar.setText("");
+			txtEnviar.grabFocus();
+	}
+	
 }
