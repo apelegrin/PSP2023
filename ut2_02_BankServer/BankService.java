@@ -34,6 +34,7 @@ public class BankService extends Thread {
 			flujoS.flush();
 			while (!fin) {
 				String comando = flujoE.next();
+				System.out.println(comando);
 				if (comando.contains("quit")) {
 					fin = true;
 				}
