@@ -12,11 +12,13 @@ public class MesaService extends Thread {
 	private Socket s;
 	private PrintWriter flujoS;
 	private Scanner flujoE;
+	private ContadorMesas contadorMesas;
 	
-	public MesaService(int id, Socket s) {
+	public MesaService(int id, Socket s, ContadorMesas contadorMesas) {
 		this.s = s;
 		this.id = id;
 		this.mesaId = 0;
+		this.contadorMesas = contadorMesas;
 		this.start();
 	}
 
@@ -73,6 +75,27 @@ public class MesaService extends Thread {
 	}
 
 	private void procesaComando(String comando) {
-	
+		int siguienteAlumno;
+		int pasaSiguienteAlumno;
+		//Pedimos número como alumno
+		if (comando.contains("numero")) {
+			siguienteAlumno = contadorMesas.nextAlumno();
+			String mensa = "Número: "+siguienteAlumno;
+			flujoS.println(mensa+" espere ser atendido");
+			flujoS.flush();
+		}
+		else if (comando.contains("next")) {
+			pasaSiguienteAlumno = contadorMesas.nextContador();
+			//Si hay peticiones pendientes
+			if (pasaSiguienteAlumno != 0) {
+				String mensa = "NÚMERO : "+ pasaSiguienteAlumno+ " Pase a la Mesa "+mesaId;
+				flujoS.println(mensa);
+				flujoS.flush();
+			}else {
+				String mensa = "No hay alumnos que atender";
+				flujoS.println(mensa);
+				flujoS.flush();
+			}
+		}
 	}
 }
